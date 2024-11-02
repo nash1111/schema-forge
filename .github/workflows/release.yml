@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release
+      - master
 
 # This workflow will trigger on each push to the `release` branch to create or update a GitHub release, build your app, and upload the artifacts to the release.
 
@@ -114,4 +115,3 @@ jobs:
         with:
           name: schema-forge-windows-nsis
           path: D:\a\schema-forge\schema-forge\src-tauri\target\release\bundle\nsis\schema-forge_0.1.0_x64-setup.exe
-        
