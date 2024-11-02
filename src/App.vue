@@ -15,10 +15,7 @@ async function greet() {
   <div id="app">
     <header>
       <h1>My Application</h1>
-      <nav>
-        <router-link to="/">Home</router-link> |
-        <router-link to="/openapi-uploader">OpenAPI Uploader</router-link>
-      </nav>
+
     </header>
     <main>
       <router-view />

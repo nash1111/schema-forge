@@ -1,45 +1,79 @@
-<!-- src/pages/OpenAPIUploader.vue -->
 <template>
-    <div class="drop-zone" @drop="handleDrop" @dragover.prevent>
+    <div class="drop-zone" @drop="handleDrop" @dragover.prevent @click="triggerFileInput">
         <p>upload OpenAPI file</p>
+        <input type="file" ref="fileInput" @change="handleFileSelect" style="display: none;" />
     </div>
-    <button @click="saveOpenAPI">保存</button>
+    <button @click="loadOpenAPI">load OpenAPI</button>
     <pre>{{ openApiData }}</pre>
+    <pre>{{ fileName }}</pre>
+    <pre>{{ parseResult }}</pre>
+    <router-link to="/">Home</router-link> 
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { invoke } from "@tauri-apps/api/core";
 
-const openApiData = ref(null);
+const openApiData = ref('');
+const fileName = ref('');
+const parseResult = ref('');
+const fileInput = ref<HTMLInputElement | null>(null);
+
+function triggerFileInput() {
+    fileInput.value?.click();
+}
+
+async function handleFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
+
+    if (files && files.length > 0) {
+        processFile(files[0]);
+    }
+}
 
 async function handleDrop(event: DragEvent) {
     event.preventDefault();
     const files = event.dataTransfer?.files;
 
     if (files && files.length > 0) {
-        const file = files[0];
+        processFile(files[0]);
+    }
+}
 
-        if (file.type === "application/x-yaml" || file.name.endsWith(".yml") || file.name.endsWith(".yaml")) {
-            try {
-                openApiData.value = await invoke("load_openapi", { filePath: file.path });
-            } catch (error) {
-                console.error("Failed to load OpenAPI data:", error);
-            }
-        } else {
-            console.warn("YAMLファイルをドロップしてください");
+async function processFile(file: File) {
+    fileName.value = file.name;
+
+    if (file.type === "application/x-yaml" || file.name.endsWith(".yml") || file.name.endsWith(".yaml")) {
+        try {
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const content = e.target?.result as string;
+                openApiData.value = content;
+            };
+            reader.readAsText(file);
+        } catch (error) {
+            console.error("Failed to load OpenAPI data:", error);
         }
+    } else {
+        console.warn("upload OpenAPI file");
     }
 }
 
-async function saveOpenAPI() {
+async function loadOpenAPI() {
+    if (!openApiData.value) {
+        console.warn("OpenAPI data is empty");
+        return;
+    }
+
     try {
-        await invoke("save_openapi", { data: openApiData.value, filePath: "path/to/save.yml" });
-        console.log("YAMLファイルが保存されました");
+        parseResult.value = await invoke("parse_openapi", { content: openApiData.value });
     } catch (error) {
-        console.error("Failed to save OpenAPI data:", error);
+        parseResult.value = `Error: ${error}`;
+        console.error("Failed to load OpenAPI data:", error);
     }
 }
+
 </script>
 
 <style scoped>
@@ -52,6 +86,7 @@ async function saveOpenAPI() {
     justify-content: center;
     text-align: center;
     color: #555;
+    cursor: pointer;
 }
 
 .drop-zone:hover {
