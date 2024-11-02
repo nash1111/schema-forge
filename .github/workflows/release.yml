@@ -60,3 +60,58 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+
+      - name: Upload macOS ARM64 artifact (.app)
+        uses: actions/upload-artifact@v3
+        with:
+          name: schema-forge-macos-arm64-app
+          path: /Users/runner/work/schema-forge/schema-forge/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/schema-forge.app
+        
+      - name: Upload macOS ARM64 artifact (.dmg)
+        uses: actions/upload-artifact@v3
+        with:
+          name: schema-forge-macos-arm64-dmg
+          path: /Users/runner/work/schema-forge/schema-forge/src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/schema-forge_0.1.0_aarch64.dmg
+
+      - name: Upload macOS x86_64 artifact (.app)
+        uses: actions/upload-artifact@v3
+        with:
+          name: schema-forge-macos-x86_64-app
+          path: /Users/runner/work/schema-forge/schema-forge/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/schema-forge.app
+
+      - name: Upload macOS x86_64 artifact (.dmg)
+        uses: actions/upload-artifact@v3
+        with:
+          name: schema-forge-macos-x86_64-dmg
+          path: /Users/runner/work/schema-forge/schema-forge/src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/schema-forge_0.1.0_x64.dmg
+    
+      - name: Upload Linux Debian artifact (.deb)
+        uses: actions/upload-artifact@v3
+        with:
+          name: schema-forge-linux-deb
+          path: /home/runner/work/schema-forge/schema-forge/src-tauri/target/release/bundle/deb/schema-forge_0.1.0_amd64.deb
+
+      - name: Upload Linux RPM artifact (.rpm)
+        uses: actions/upload-artifact@v3
+        with:
+          name: schema-forge-linux-rpm
+          path: /home/runner/work/schema-forge/schema-forge/src-tauri/target/release/bundle/rpm/schema-forge-0.1.0-1.x86_64.rpm
+
+      - name: Upload Linux AppImage artifact (.AppImage)
+        uses: actions/upload-artifact@v3
+        with:
+          name: schema-forge-linux-appimage
+          path: /home/runner/work/schema-forge/schema-forge/src-tauri/target/release/bundle/appimage/schema-forge_0.1.0_amd64.AppImage
+
+      - name: Upload Windows MSI artifact (.msi)
+        uses: actions/upload-artifact@v3
+        with:
+          name: schema-forge-windows-msi
+          path: D:\a\schema-forge\schema-forge\src-tauri\target\release\bundle\msi\schema-forge_0.1.0_x64_en-US.msi
+
+      - name: Upload Windows NSIS installer (.exe)
+        uses: actions/upload-artifact@v3
+        with:
+          name: schema-forge-windows-nsis
+          path: D:\a\schema-forge\schema-forge\src-tauri\target\release\bundle\nsis\schema-forge_0.1.0_x64-setup.exe
+        
